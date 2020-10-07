@@ -1,11 +1,10 @@
-#define _IN_FM_
-
 #include "FrameManager.h"
+#include "Logger.h"
 #include "Arduino.h"
 
-//TODO: add logger
-FrameManager::FrameManager(){
-  //nothing to initialize really 
+FrameManager::FrameManager(Logger *logger){
+  this->logger = logger;
+
   for (int i = 0; i < MAX_FRAME_TASKS + 1; i++) 
     frameTasks[i] = NULL;
 }
@@ -34,12 +33,15 @@ void FrameManager::ProcessFrame(){
     long asSigned;  
   } now;
 
+  // TODO: force wrap-around after one minute
   now.asUnsigned = millis();
  
-  long delta = now.asSigned - next_frame;
+  long delta = now.asSigned - this->next_frame;
+
+  logger->Log(LOG_LEVEL_DEBUG, "Current signed time %ld, delta %ld", now.asSigned, delta);
+
   if (delta > 0) {
-     next_frame = (now.asSigned / FRAME_PERIOD_MS + 1) * FRAME_PERIOD_MS;
-   
-  
+     this->next_frame = (now.asSigned / FRAME_PERIOD_MS + 1) * FRAME_PERIOD_MS;
+     this->RunAllTasks(frameTasks);
    }
 }

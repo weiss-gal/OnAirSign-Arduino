@@ -32,13 +32,12 @@ void setup() {
   M.begin();
   M.clear();  
   
-  fm = new FrameManager();
+ 
   logger = new Logger();
+  fm = new FrameManager(logger);
   int res = fm->RegisterFrameTask(refreshDisplay);
   delay(2000); 
-  Serial.println("started"); //TODO: remove
   logger->Log(LOG_LEVEL_INFO, "Started");
-  
   
 }
 
