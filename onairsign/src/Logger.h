@@ -5,9 +5,12 @@ enum LogLevel_t {
     LOG_LEVEL_DEBUG,
     LOG_LEVEL_INFO,
     LOG_LEVEL_WARNING,
-    LOG_LEVEL_ERROR
+    LOG_LEVEL_ERROR,
+    LOG_LEVEL_FATAL
 };
 
+// TODO: add minimal log level
+// TODO: make minimal log level configurable
 class Logger {
     public:
         Logger();
@@ -21,6 +24,7 @@ class Logger {
             case LOG_LEVEL_INFO: return "INFO";
             case LOG_LEVEL_WARNING: return "WARNING";
             case LOG_LEVEL_ERROR: return "ERROR";
+            case LOG_LEVEL_FATAL: return "FATAL";
         }
 
         return "UNKNOWN";

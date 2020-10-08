@@ -5,7 +5,7 @@
 #include "Logger.h"
 
 #define MAX_FRAME_TASKS 4
-#define FRAME_PERIOD_MS 10
+#define FRAME_PERIOD_MS 100
 
 typedef void (*FrameTaskType)();
 
@@ -22,7 +22,7 @@ class FrameManager
   private:  
     FrameTaskType frameTasks[MAX_FRAME_TASKS + 1]; // null terminated
     long next_frame = 0; // start value of millis()
-    void FrameManager::RunAllTasks(FrameTaskType *frameTasks);
+    void RunAllTasks(FrameTaskType *frameTasks);
     Logger *logger;
 };
 

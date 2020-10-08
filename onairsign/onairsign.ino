@@ -1,6 +1,9 @@
-#include "src/FrameManager.h"
-#include "src/Logger.h"
 #include <MD_MAX72xx.h>
+#include <SPI.h>
+
+#include "src/FrameManager.h"
+#include "src/DisplayManager.h"
+#include "src/Logger.h"
 #include <SPI.h>
 
 
@@ -14,44 +17,34 @@
 
 MD_MAX72XX M = MD_MAX72XX(HARDWARE_TYPE, CS_PIN, MAX_DEVICES);
 
-
-
 // Serial management
 #define MSG_BUFFER_LEN 128
 
 static FrameManager *fm;
 static Logger *logger;
+static DisplayManager *dm;
 
 void setup() {
   /* Hardware initalization */
-  Serial.begin(9600);
+  Serial.begin(115200);
   while (!Serial) {
     ; // wait for serial port to connect. Needed for native USB
   }
-  
-  M.begin();
-  M.clear();  
-  
  
   logger = new Logger();
+  dm = new DisplayManager(&M, logger);
   fm = new FrameManager(logger);
-  int res = fm->RegisterFrameTask(refreshDisplay);
+  fm->RegisterFrameTask(refreshDisplay);
   delay(2000); 
   logger->Log(LOG_LEVEL_INFO, "Started");
   
 }
 
-int r = 0, c = 0;
+
 
 // frame is a processing window of FRAME_PERIOD_MS length
 void refreshDisplay() {
-  M.setPoint(r, c, false);
-  c = (c + 1) % (8 * 4);
-  if (c == 0)
-  {
-    r = (r + 1) % 8;
-  }
-  M.setPoint(r, c, true);
+  dm->RefreshDisplay();
 }
 
 // The message 'msg' is a null terminated string and is only available

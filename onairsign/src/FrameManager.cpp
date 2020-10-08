@@ -22,7 +22,7 @@ int FrameManager::RegisterFrameTask(FrameTaskType task){
 
 void FrameManager::RunAllTasks(FrameTaskType *frameTasks){
   for (int i = 0; frameTasks[i]; i++)
-      frameTasks[i]();
+    frameTasks[i]();  
 }
 
 void FrameManager::ProcessFrame(){

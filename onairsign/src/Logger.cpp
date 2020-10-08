@@ -18,7 +18,7 @@ void Logger::Log(LogLevel_t level, const char* format, ...){
     Serial.print(": ");
     Serial.print(buffer);
     Serial.print(MESSAGE_TERMINATION);
-
-
+    if (level == LOG_LEVEL_FATAL)
+      Serial.flush();
     va_end(args);
 }
