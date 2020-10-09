@@ -13,22 +13,24 @@ enum LogLevel_t {
 // TODO: make minimal log level configurable
 class Logger {
     public:
-        Logger();
+        Logger(LogLevel_t minLogLevel);
         void Log(LogLevel_t level, const char *format, ...)  
             __attribute__ ((format (printf, 3, 4))); // 3,4 instead of 2,3 because this is a class method.
         
     private:
-    static const char *LogLevel2String(LogLevel_t level) {
-        switch (level) {
-            case LOG_LEVEL_DEBUG: return "DEBUG";
-            case LOG_LEVEL_INFO: return "INFO";
-            case LOG_LEVEL_WARNING: return "WARNING";
-            case LOG_LEVEL_ERROR: return "ERROR";
-            case LOG_LEVEL_FATAL: return "FATAL";
-        }
+        LogLevel_t minLogLevel;
 
-        return "UNKNOWN";
-    }
+        static const char *LogLevel2String(LogLevel_t level) {
+            switch (level) {
+                case LOG_LEVEL_DEBUG: return "DEBUG";
+                case LOG_LEVEL_INFO: return "INFO";
+                case LOG_LEVEL_WARNING: return "WARNING";
+                case LOG_LEVEL_ERROR: return "ERROR";
+                case LOG_LEVEL_FATAL: return "FATAL";
+            }
+
+            return "UNKNOWN";
+        }
 
 };
 

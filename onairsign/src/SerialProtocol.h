@@ -2,5 +2,6 @@
 #define _SERIAL_PROTOCOL_H_
 
 #define MESSAGE_TERMINATION "\r\n"
+#define LOG_COMMAND_PREFIX "LOG "
 
 #endif

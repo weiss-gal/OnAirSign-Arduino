@@ -38,10 +38,9 @@ void FrameManager::ProcessFrame(){
  
   long delta = now.asSigned - this->next_frame;
 
-  logger->Log(LOG_LEVEL_DEBUG, "Current signed time %ld, delta %ld", now.asSigned, delta);
-
   if (delta > 0) {
      this->next_frame = (now.asSigned / FRAME_PERIOD_MS + 1) * FRAME_PERIOD_MS;
+     //logger->Log(LOG_LEVEL_DEBUG, "Starting frame at signed time %ld, next frame at %ld", now.asSigned, this->next_frame);
      this->RunAllTasks(frameTasks);
    }
 }
