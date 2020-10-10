@@ -1,15 +1,13 @@
 #include "SerialManager.h"
 #include "SerialProtocol.h"
 
+#define RESPONSE_MESSAGE_LEN 128
+
 SerialManager::SerialManager(HardwareSerial *serial, MessageHandler *messageHandler, Logger *logger){
     this->serial = serial;
     this->messageHandler = messageHandler;
     this->logger = logger;
     memset(this->messageBuffer, 0, MSG_BUFFER_LEN);
-}
-
-void SerialManager::callbackHandlerStub(const char *response){
-    logger->Log(LOG_LEVEL_DEBUG, "Sending response '%s'", response);
 }
 
 void SerialManager::ProcessInput(){
@@ -21,7 +19,11 @@ void SerialManager::ProcessInput(){
         if (messageIndex >= terminationLength && !strcmp(MESSAGE_TERMINATION, messageBuffer + messageIndex - terminationLength))
         {
             messageBuffer[messageIndex - terminationLength] = 0;
-            messageHandler->HandleMessage(messageBuffer, NULL);
+            char responseBuf[RESPONSE_MESSAGE_LEN];
+            if (messageHandler->HandleMessage(messageBuffer, responseBuf, RESPONSE_MESSAGE_LEN)) {
+                serial->print(responseBuf);
+                serial->print(MESSAGE_TERMINATION);
+            }
 
             // reset message buffer
             memset(messageBuffer, 0, MSG_BUFFER_LEN); // TODO: this is not needed.

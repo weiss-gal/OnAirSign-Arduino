@@ -7,11 +7,11 @@ typedef void (*SendResponse_t)(const char *response);
 class MessageHandler {
     public: 
         MessageHandler(Logger *logger);
-        void HandleMessage(const char *message, SendResponse_t responseCB);
+        bool HandleMessage(const char *message, char *response, int responseLen);
 
-    private:
+    private:    
         Logger *logger;
-        void handleCommandHello(char *args, SendResponse_t responseCB);
+        bool handleCommandHello(char *args, char *response, int responseLen);
 
 };
 

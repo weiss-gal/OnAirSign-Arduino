@@ -43,8 +43,7 @@ char *parseNextArg(char *argsString, ArgPair_t & outPair){
     return nextArg;
 }
 
-
-void MessageHandler::handleCommandHello(char *args, SendResponse_t responseCB){
+bool MessageHandler::handleCommandHello(char *args,  char *response, int responseLen){
     logger->Log(LOG_LEVEL_INFO, "Handling command " CMD_HELLO " args: '%s'", args);
     
     char *cmdId = NULL; 
@@ -68,21 +67,25 @@ void MessageHandler::handleCommandHello(char *args, SendResponse_t responseCB){
 
     logger->Log(LOG_LEVEL_DEBUG, "Done parsing HELLO command, command id is %s", cmdId ? cmdId : "empty");
  
-    char responseBuf[TMP_BUF_LEN];
-    int count = snprintf(responseBuf, TMP_BUF_LEN, CMD_RESPONSE " " CMD_HELLO); 
+    bool responseBufferExceeded = false;
+    int count = snprintf(response, responseLen, CMD_RESPONSE " " CMD_HELLO); 
     if (cmdId) 
-        snprintf(responseBuf + count, TMP_BUF_LEN - count, ARG_CMDID "=%s", cmdId);
+        // Adding 1 for null termination
+        if (count + snprintf(response + count, responseLen - count, " %s=%s", ARG_CMDID, cmdId) + 1 > responseLen)
+            responseBufferExceeded = true;
 
-    responseBuf[TMP_BUF_LEN - 1] = 0;
-
-    //responseCB(responseBuf);
+    if (responseBufferExceeded) {
+        logger->Log(LOG_LEVEL_ERROR, "Command: %s response buffer of length %d exceeded", CMD_HELLO, responseLen);
+        return false;
+    }
+    return true;
 }
 
-void MessageHandler::HandleMessage(const char *message, SendResponse_t responseCB){
+bool MessageHandler::HandleMessage(const char *message, char *response, int responseLen){
     int messageLength = strlen(message);
     if (messageLength + 1> TMP_BUF_LEN) {
         logger->Log(LOG_LEVEL_ERROR, "Message Handler cannot handle a message of length %d", messageLength);
-        return;
+        return false;
     }
 
     char tmpBuf[TMP_BUF_LEN];
@@ -90,9 +93,10 @@ void MessageHandler::HandleMessage(const char *message, SendResponse_t responseC
     
     char *argsString = tokenizeUntil(tmpBuf, TOKEN_SEPARATOR);
 
-    if (!strcmp(tmpBuf, CMD_HELLO)) {
-        handleCommandHello(argsString, responseCB);
-    } else {
-        logger->Log(LOG_LEVEL_WARNING, "Unknown command '%s'", tmpBuf);
-    }
+    
+    if (!strcmp(tmpBuf, CMD_HELLO)) 
+        return handleCommandHello(argsString, response, responseLen);
+ 
+    logger->Log(LOG_LEVEL_WARNING, "Unknown command '%s'", tmpBuf);
+    return false;
 }
