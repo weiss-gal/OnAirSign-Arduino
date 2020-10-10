@@ -1,7 +1,8 @@
 # OnAirSign-Arduino
 Arduino part of "On-Air sign" project
 
-This project is currnetly under construction. 
+<mark>This project is currnetly under construction. </mark>
+
 Add to your watch list to know when its finally usable (ETA - a matter of days)
 
 The target is to create an arduino based "on air" sign, connected to a PC via USB cable, 
