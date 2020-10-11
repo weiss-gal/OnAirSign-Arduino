@@ -7,14 +7,14 @@ const int AudioPlayingDisplayElement::GetWidth(){
 }
 
 bool AudioPlayingDisplayElement::Tick(){
-    tickCounter++;
+    tickCounter = (tickCounter + 1) % 10;
 
-    return isPlaying ? tickCounter % 2 == 0 : tickCounter % 10 == 0;
+    return isPlaying ? tickCounter % 2 == 0 : tickCounter == 0;
 }
 
 uint8_t *AudioPlayingDisplayElement::GetBitmap(){
     if (isPlaying) {
-        switch (tickCounter % 10) {
+        switch (tickCounter) {
             case 0: //fallthrough
             case 1: 
                 DisplayBitmapUtils::DisplayBitmapCopy(outputBuffer, DisplayBitmaps::AudioPlayingBase, AUDIO_PLAYING_WIDTH);
