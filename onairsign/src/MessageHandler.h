@@ -2,16 +2,25 @@
 #define _MESSAGE_HANDLER_H_
 #include "Logger.h"
 
-typedef void (*SendResponse_t)(const char *response);
+// This is what would come from the host
+typedef struct {
+    bool isAudioPlaying;
+    bool isAudioCapturing;
+    bool isCameraCapturing;
+} RequestedDisplayState_t;
+
+typedef void (*RequestDisplayStateUpdate_t)(RequestedDisplayState_t requestedState);
 
 class MessageHandler {
     public: 
-        MessageHandler(Logger *logger);
+        MessageHandler(RequestDisplayStateUpdate_t requestUpdateCB, Logger *logger);
         bool HandleMessage(const char *message, char *response, int responseLen);
 
     private:    
         Logger *logger;
         bool handleCommandHello(char *args, char *response, int responseLen);
+        bool handleCommandSetDisplay(char *args,  char *response, int responseLen);
+        RequestDisplayStateUpdate_t requestUpdateCB;
 
 };
 

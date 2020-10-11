@@ -17,11 +17,25 @@
 
 MD_MAX72XX M = MD_MAX72XX(HARDWARE_TYPE, CS_PIN, MAX_DEVICES);
 
+//TODO: we don't really have an isConnected implementation yet
+static DisplayState_t displayState = {true, false, false, false};
 static FrameManager *fm;
 static Logger *logger;
 static DisplayManager *dm;
 static SerialManager *sm;
 static MessageHandler *mh;
+
+// frame is a processing window of FRAME_PERIOD_MS length
+void refreshDisplay() {
+  dm->RefreshDisplay();
+}
+
+void requsestDisplayStateUpdate(RequestedDisplayState_t state) {
+  displayState.isAudioPlaying = state.isAudioPlaying;
+  displayState.isAudioCapturing = state.isAudioCapturing;
+  displayState.isCameraCapturing = state.isCameraCapturing;
+  dm->SetDisplayState(displayState);
+}
 
 void setup() {
   /* Hardware initalization */
@@ -32,25 +46,17 @@ void setup() {
   
   logger = new Logger(LOG_LEVEL_DEBUG);
   dm = new DisplayManager(&M, logger);
+  dm->SetDisplayState(displayState);
   fm = new FrameManager(logger);
-  fm->RegisterFrameTask(refreshDisplay);
-  mh = new MessageHandler(logger);
+  fm->RegisterFrameTask(refreshDisplay); // only one task per frame now
+  mh = new MessageHandler(requsestDisplayStateUpdate, logger);
   sm = new SerialManager(&Serial, mh, logger);
   
   delay(2000); 
-  logger->Log(LOG_LEVEL_INFO, "Started");
-}
-
-
-
-// frame is a processing window of FRAME_PERIOD_MS length
-void refreshDisplay() {
-  dm->RefreshDisplay();
+  logger->Log(LOG_LEVEL_INFO, "Started");  
 }
 
 void loop() {
-  static int message_index = 0;
-
   fm->ProcessFrame();
   sm->ProcessInput();
 }

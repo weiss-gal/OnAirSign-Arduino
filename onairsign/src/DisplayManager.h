@@ -3,6 +3,7 @@
 
 #include "Logger.h"
 #include "DisplayElement.h"
+#include "AudioPlayingDisplayElement.h"
 #include <MD_MAX72XX.h>
 
 #define DISPLAY_ELEMENTS_NUM 3
@@ -25,6 +26,9 @@ class DisplayManager {
         Logger *logger;
         DisplayState_t displayState = {false, false, false, false};
         DisplayElement *elements[DISPLAY_ELEMENTS_NUM];
+        AudioPlayingDisplayElement *audioPlaying;
+        AudioPlayingDisplayElement *audioCapturing;
+        AudioPlayingDisplayElement *cameraCapturing;
 };
 
 #endif
