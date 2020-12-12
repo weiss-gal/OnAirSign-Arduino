@@ -4,9 +4,10 @@
 #include "Logger.h"
 #include "DisplayElement.h"
 #include "AudioPlayingDisplayElement.h"
+#include "AudioCapturingDisplayElement.h"
 #include <MD_MAX72XX.h>
 
-#define DISPLAY_ELEMENTS_NUM 3
+#define DISPLAY_ELEMENTS_NUM 2
 
 typedef struct {
     bool isConnected;
@@ -26,9 +27,8 @@ class DisplayManager {
         Logger *logger;
         DisplayState_t displayState = {false, false, false, false};
         DisplayElement *elements[DISPLAY_ELEMENTS_NUM];
-        AudioPlayingDisplayElement *audioPlaying;
-        AudioPlayingDisplayElement *audioCapturing;
-        AudioPlayingDisplayElement *cameraCapturing;
+        DisplayElement *audioPlaying;
+        DisplayElement *audioCapturing;
 };
 
 #endif

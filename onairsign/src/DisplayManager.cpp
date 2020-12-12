@@ -1,6 +1,9 @@
 #include "DisplayManager.h"
 #include "AudioPlayingDisplayElement.h"
+#include "AudioCapturingDisplayElement.h"
 #include <Arduino.h>
+
+#define SEPARATOR_WIDTH 2
 
 DisplayManager::DisplayManager(MD_MAX72XX *matrix, Logger *logger){
     this->matrix = matrix;
@@ -11,12 +14,11 @@ DisplayManager::DisplayManager(MD_MAX72XX *matrix, Logger *logger){
 
     //TODO: put real elements
     audioPlaying = new AudioPlayingDisplayElement();
-    audioCapturing = new AudioPlayingDisplayElement();
-    cameraCapturing = new AudioPlayingDisplayElement();
+    audioCapturing = new AudioCapturingDisplayElement();
+    //cameraCapturing = new AudioPlayingDisplayElement();
 
     elements[0] = audioPlaying;
     elements[1] = audioCapturing;
-    elements[2] = cameraCapturing;
 }
 
 void DisplayManager::SetDisplayState(DisplayState_t newState){
@@ -26,7 +28,7 @@ void DisplayManager::SetDisplayState(DisplayState_t newState){
     
     audioPlaying->SetIsPlaying(newState.isAudioPlaying);
     audioCapturing->SetIsPlaying(newState.isAudioCapturing);
-    cameraCapturing->SetIsPlaying(newState.isCameraCapturing);
+    //cameraCapturing->SetIsPlaying(newState.isCameraCapturing);
 }
 
 // TODO: add internal timing (do not rely on the cadence of RefreshDisplay)
@@ -38,6 +40,6 @@ void DisplayManager::RefreshDisplay(){
             uint8_t *buffer = elements[i]->GetBitmap();
             matrix->setBuffer(currColumn, elements[i]->GetWidth(), buffer);
         }
-        currColumn -= elements[i]->GetWidth() + 1;// +1 for separator
+        currColumn -= elements[i]->GetWidth() + SEPARATOR_WIDTH;// +1 for separator
     }
 }
