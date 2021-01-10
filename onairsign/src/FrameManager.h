@@ -8,6 +8,10 @@
 #define FRAME_PERIOD_MS 100
 
 typedef void (*FrameTaskType)();
+typedef struct {
+  FrameTaskType frameTaskCB;
+  int freq; // Task frequency in frames 
+} FrameTask_t;
 
 // library interface description
 class FrameManager
@@ -15,14 +19,15 @@ class FrameManager
   // user-accessible "public" interface
   public:
     FrameManager(Logger *logger);
-    int RegisterFrameTask(FrameTaskType task);
+    int RegisterFrameTask(FrameTaskType task, int freq);
     void ProcessFrame();
 
   // library-accessible "private" interface
   private:  
-    FrameTaskType frameTasks[MAX_FRAME_TASKS + 1]; // null terminated
+    FrameTask_t frameTasks[MAX_FRAME_TASKS + 1]; // null terminated
     long next_frame = 0; // start value of millis()
-    void RunAllTasks(FrameTaskType *frameTasks);
+    int frameCount = 0;
+    void RunAllTasks(FrameTask_t *frameTasks);
     Logger *logger;
 };
 

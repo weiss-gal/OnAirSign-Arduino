@@ -48,7 +48,7 @@ void setup() {
   dm = new DisplayManager(&M, logger);
   dm->SetDisplayState(displayState);
   fm = new FrameManager(logger);
-  fm->RegisterFrameTask(refreshDisplay); // only one task per frame now
+  fm->RegisterFrameTask(refreshDisplay, 1); // only one task per frame now
   mh = new MessageHandler(requsestDisplayStateUpdate, logger);
   sm = new SerialManager(&Serial, mh, logger);
   

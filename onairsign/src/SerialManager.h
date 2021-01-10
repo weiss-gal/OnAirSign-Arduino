@@ -17,8 +17,6 @@ class SerialManager {
         Logger *logger;
         char messageBuffer[MSG_BUFFER_LEN];
         int messageIndex = 0;
-
-        void callbackHandlerStub(const char *response); //TODO: remove 
 };
 
 #endif 
