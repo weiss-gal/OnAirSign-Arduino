@@ -10,10 +10,11 @@ typedef struct {
 } RequestedDisplayState_t;
 
 typedef void (*RequestDisplayStateUpdate_t)(RequestedDisplayState_t requestedState);
+typedef void (*MessageReceived_t)();
 
 class MessageHandler {
     public: 
-        MessageHandler(RequestDisplayStateUpdate_t requestUpdateCB, Logger *logger);
+        MessageHandler(RequestDisplayStateUpdate_t requestUpdateCB, MessageReceived_t messageRecievedCB, Logger *logger);
         bool HandleMessage(const char *message, char *response, int responseLen);
 
     private:    
@@ -21,7 +22,7 @@ class MessageHandler {
         bool handleCommandHello(char *args, char *response, int responseLen);
         bool handleCommandSetDisplay(char *args,  char *response, int responseLen);
         RequestDisplayStateUpdate_t requestUpdateCB;
-
+        MessageReceived_t messageRecievedCB;
 };
 
 #endif

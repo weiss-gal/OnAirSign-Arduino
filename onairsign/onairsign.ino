@@ -6,6 +6,7 @@
 #include "src/Logger.h"
 #include "src/SerialManager.h"
 #include "src/MessageHandler.h"
+#include "src/ConnectivityManager.h"
 
 // LED matrix related stuff
 #define HARDWARE_TYPE MD_MAX72XX::FC16_HW
@@ -24,10 +25,29 @@ static Logger *logger;
 static DisplayManager *dm;
 static SerialManager *sm;
 static MessageHandler *mh;
+static ConnectivityManager *cm;
 
-// frame is a processing window of FRAME_PERIOD_MS length
 void refreshDisplay() {
   dm->RefreshDisplay();
+}
+
+void tickConnectivityManager(){
+  cm->Tick();
+}
+
+void pingConnectivityManager(){
+  cm->Ping();
+}
+
+void connectivityStateUpdate(bool isConnected){
+  // If display is not connected, everything defaults to false
+  if (!isConnected) {
+    displayState.isAudioPlaying = false;
+    displayState.isAudioCapturing = false;
+    displayState.isCameraCapturing = false;
+  }
+  displayState.isConnected = isConnected;
+  dm->SetDisplayState(displayState);
 }
 
 void requsestDisplayStateUpdate(RequestedDisplayState_t state) {
@@ -48,8 +68,10 @@ void setup() {
   dm = new DisplayManager(&M, logger);
   dm->SetDisplayState(displayState);
   fm = new FrameManager(logger);
-  fm->RegisterFrameTask(refreshDisplay, 1); // only one task per frame now
-  mh = new MessageHandler(requsestDisplayStateUpdate, logger);
+  cm = new ConnectivityManager(connectivityStateUpdate, logger);
+  fm->RegisterFrameTask(refreshDisplay, 1); 
+  fm->RegisterFrameTask(tickConnectivityManager, 1);
+  mh = new MessageHandler(requsestDisplayStateUpdate, pingConnectivityManager, logger);
   sm = new SerialManager(&Serial, mh, logger);
   
   delay(2000); 

@@ -16,9 +16,10 @@
 #define ARG_STATUS "status"
 #define ARG_REASON "reason"
 
-MessageHandler::MessageHandler(RequestDisplayStateUpdate_t requestUpdateCB, Logger *logger){
+MessageHandler::MessageHandler(RequestDisplayStateUpdate_t requestUpdateCB, MessageReceived_t messageRecievedCB, Logger *logger){
     this->requestUpdateCB = requestUpdateCB;
     this->logger = logger;
+    this->messageRecievedCB = messageRecievedCB;
 }
 
 typedef struct {
@@ -86,6 +87,10 @@ bool MessageHandler::handleCommandHello(char *args,  char *response, int respons
         logger->Log(LOG_LEVEL_ERROR, "Command: %s response buffer of length %d exceeded", CMD_HELLO, responseLen);
         return false;
     }
+
+    // Hello is used as a keepalive
+    messageRecievedCB();
+
     return true;
 }
 
@@ -156,6 +161,10 @@ bool MessageHandler::handleCommandSetDisplay(char *args,  char *response, int re
         logger->Log(LOG_LEVEL_ERROR, "Command: %s response buffer of length %d exceeded", CMD_HELLO, responseLen);
         return false;
     }
+
+    // SET_STATE is also used as a keepalive
+    messageRecievedCB();
+  
     return true;
 }
 

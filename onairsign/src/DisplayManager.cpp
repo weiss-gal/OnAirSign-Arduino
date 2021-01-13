@@ -12,7 +12,6 @@ DisplayManager::DisplayManager(MD_MAX72XX *matrix, Logger *logger){
     this->matrix->begin();
     this->matrix->clear();
 
-    //TODO: put real elements
     audioPlaying = new AudioPlayingDisplayElement();
     audioCapturing = new AudioCapturingDisplayElement();
     //cameraCapturing = new AudioPlayingDisplayElement();
