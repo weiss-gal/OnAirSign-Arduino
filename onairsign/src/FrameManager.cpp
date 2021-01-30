@@ -44,7 +44,7 @@ void FrameManager::ProcessFrame(){
 
   if (delta > 0) {
      this->next_frame = (now.asSigned / FRAME_PERIOD_MS + 1) * FRAME_PERIOD_MS;
-     RunAllTasks(frameTasks);
+     RunAllTasks(frameTasks);  
      this->frameCount++;
    }
 }

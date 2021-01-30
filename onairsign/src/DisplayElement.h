@@ -17,7 +17,7 @@ class DisplayElement {
         // Gets the current element bitmap as a vector of size 'GetWidth()' of uint8, each represent the column pixels 
         // as a bitmap
         virtual uint8_t *GetBitmap() = 0;
-
+        
         virtual void SetIsPlaying(bool isPlaying) = 0;
 };
 

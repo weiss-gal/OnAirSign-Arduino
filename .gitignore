@@ -35,3 +35,5 @@
 .vs/slnx.sqlite
 .vs/VSWorkspaceState.json
 .vs/OnAirSign-Arduino/v16/.suo
+onairsign/onairsign.ino.eightanaloginputs.hex
+onairsign/onairsign.ino.with_bootloader.eightanaloginputs.hex

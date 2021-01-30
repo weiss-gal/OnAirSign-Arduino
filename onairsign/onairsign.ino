@@ -7,7 +7,7 @@
 #include "src/SerialManager.h"
 #include "src/MessageHandler.h"
 #include "src/ConnectivityManager.h"
-
+ 
 // LED matrix related stuff
 #define HARDWARE_TYPE MD_MAX72XX::FC16_HW
 #define MAX_DEVICES 4
@@ -50,7 +50,7 @@ void connectivityStateUpdate(bool isConnected){
   dm->SetDisplayState(displayState);
 }
 
-void requsestDisplayStateUpdate(RequestedDisplayState_t state) {
+void requestDisplayStateUpdate(RequestedDisplayState_t state) {
   displayState.isAudioPlaying = state.isAudioPlaying;
   displayState.isAudioCapturing = state.isAudioCapturing;
   displayState.isCameraCapturing = state.isCameraCapturing;
@@ -65,17 +65,15 @@ void setup() {
   }
   
   logger = new Logger(LOG_LEVEL_DEBUG);
+  
   dm = new DisplayManager(&M, logger);
-  dm->SetDisplayState(displayState);
-  fm = new FrameManager(logger);
+  //dm->SetDisplayState(displayState);
   cm = new ConnectivityManager(connectivityStateUpdate, logger);
+  fm = new FrameManager(logger);
   fm->RegisterFrameTask(refreshDisplay, 1); 
   fm->RegisterFrameTask(tickConnectivityManager, 1);
-  mh = new MessageHandler(requsestDisplayStateUpdate, pingConnectivityManager, logger);
+  mh = new MessageHandler(requestDisplayStateUpdate, pingConnectivityManager, logger);
   sm = new SerialManager(&Serial, mh, logger);
-  
-  delay(2000); 
-  logger->Log(LOG_LEVEL_INFO, "Started");  
 }
 
 void loop() {

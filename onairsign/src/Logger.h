@@ -9,7 +9,6 @@ enum LogLevel_t {
     LOG_LEVEL_FATAL
 };
 
-// TODO: add minimal log level
 // TODO: make minimal log level configurable
 class Logger {
     public:

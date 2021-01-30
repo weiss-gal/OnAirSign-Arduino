@@ -3,6 +3,7 @@
 
 #include "Logger.h"
 #include "DisplayElement.h"
+#include "TextDisplayElement.h"
 #include "AudioPlayingDisplayElement.h"
 #include "AudioCapturingDisplayElement.h"
 #include <MD_MAX72XX.h>
@@ -27,8 +28,8 @@ class DisplayManager {
         Logger *logger;
         DisplayState_t displayState = {false, false, false, false};
         DisplayElement *elements[DISPLAY_ELEMENTS_NUM];
-        DisplayElement *audioPlaying;
-        DisplayElement *audioCapturing;
+        TextDisplayElement *textDisplayElement;
+        bool isClearRequired;
 };
 
 #endif
