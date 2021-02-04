@@ -25,7 +25,7 @@ class TextDisplayElement  {
         MD_MAX72XX *matrix;
         int width;
         CharInfo_t text[MAX_TEXT_LENGTH]; // terminated by c=0
-        int tickCounter = 0;
+        unsigned int tickCounter = 0;
         
 };
 
